@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const LoginScreen = () => {
   const [email, setEmail] = React.useState('')
@@ -41,46 +42,48 @@ const LoginScreen = () => {
   }
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.logo}>
-        <Text style={styles.logoTitle}>TAMASTUDY</Text>
-        <Text style={styles.logoSubTitle}>React Native Study</Text>
+    <KeyboardAwareScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <View style={styles.wrapper}>
+        <View style={styles.logo}>
+          <Text style={styles.logoTitle}>TAMASTUDY</Text>
+          <Text style={styles.logoSubTitle}>React Native Study</Text>
+        </View>
+        <View style={styles.form}>
+          <TextInput
+            placeholder={'Input your Email address...'}
+            value={email}
+            onChangeText={handleChangeEmail}
+            autoCorrect={false}
+            autoCapitalize={'none'}
+            style={[styles.defaultInput, styles.emailInput]}
+          />
+          <TextInput
+            placeholder={'Input your Password...'}
+            value={password}
+            onChangeText={handleChangePassword}
+            autoCorrect={false}
+            autoCapitalize={'none'}
+            secureTextEntry
+            style={[styles.defaultInput, styles.passwordInput]}
+          />
+          <TouchableOpacity onPress={() => alert('clicked!')}>
+            <Text style={{ textAlign: 'right', color: '#fff' }}>
+              Forgot your password?
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.buttons}>
+          <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+            <Text style={styles.buttonText}>Log In</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => alert('clicked!')}>
+            <Text style={{ textAlign: 'left', color: '#fff' }}>
+              Don't have an account?
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.form}>
-        <TextInput
-          placeholder={'Input your Email address...'}
-          value={email}
-          onChangeText={handleChangeEmail}
-          autoCorrect={false}
-          autoCapitalize={'none'}
-          style={[styles.defaultInput, styles.emailInput]}
-        />
-        <TextInput
-          placeholder={'Input your Password...'}
-          value={password}
-          onChangeText={handleChangePassword}
-          autoCorrect={false}
-          autoCapitalize={'none'}
-          secureTextEntry
-          style={[styles.defaultInput, styles.passwordInput]}
-        />
-        <TouchableOpacity onPress={() => alert('clicked!')}>
-          <Text style={{ textAlign: 'right', color: '#fff' }}>
-            Forgot your password?
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttons}>
-        <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-          <Text style={styles.buttonText}>Log In</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => alert('clicked!')}>
-          <Text style={{ textAlign: 'left', color: '#fff' }}>
-            Don't have an account?
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </KeyboardAwareScrollView>
   )
 }
 

@@ -3,6 +3,7 @@ exports.__esModule = true;
 var native_1 = require("@react-navigation/native");
 var react_1 = require("react");
 var react_native_1 = require("react-native");
+var react_native_keyboard_aware_scroll_view_1 = require("react-native-keyboard-aware-scroll-view");
 var LoginScreen = function () {
     var _a = react_1["default"].useState(''), email = _a[0], setEmail = _a[1];
     var _b = react_1["default"].useState(''), password = _b[0], setPassword = _b[1];
@@ -29,20 +30,21 @@ var LoginScreen = function () {
             return;
         }
     };
-    return (react_1["default"].createElement(react_native_1.View, { style: styles.wrapper },
-        react_1["default"].createElement(react_native_1.View, { style: styles.logo },
-            react_1["default"].createElement(react_native_1.Text, { style: styles.logoTitle }, "TAMASTUDY"),
-            react_1["default"].createElement(react_native_1.Text, { style: styles.logoSubTitle }, "React Native Study")),
-        react_1["default"].createElement(react_native_1.View, { style: styles.form },
-            react_1["default"].createElement(react_native_1.TextInput, { placeholder: 'Input your Email address...', value: email, onChangeText: handleChangeEmail, autoCorrect: false, autoCapitalize: 'none', style: [styles.defaultInput, styles.emailInput] }),
-            react_1["default"].createElement(react_native_1.TextInput, { placeholder: 'Input your Password...', value: password, onChangeText: handleChangePassword, autoCorrect: false, autoCapitalize: 'none', secureTextEntry: true, style: [styles.defaultInput, styles.passwordInput] }),
-            react_1["default"].createElement(react_native_1.TouchableOpacity, { onPress: function () { return alert('clicked!'); } },
-                react_1["default"].createElement(react_native_1.Text, { style: { textAlign: 'right', color: '#fff' } }, "Forgot your password?"))),
-        react_1["default"].createElement(react_native_1.View, { style: styles.buttons },
-            react_1["default"].createElement(react_native_1.TouchableOpacity, { onPress: handleSubmit, style: styles.button },
-                react_1["default"].createElement(react_native_1.Text, { style: styles.buttonText }, "Log In")),
-            react_1["default"].createElement(react_native_1.TouchableOpacity, { onPress: function () { return alert('clicked!'); } },
-                react_1["default"].createElement(react_native_1.Text, { style: { textAlign: 'left', color: '#fff' } }, "Don't have an account?")))));
+    return (react_1["default"].createElement(react_native_keyboard_aware_scroll_view_1.KeyboardAwareScrollView, { contentContainerStyle: { flexGrow: 1 } },
+        react_1["default"].createElement(react_native_1.View, { style: styles.wrapper },
+            react_1["default"].createElement(react_native_1.View, { style: styles.logo },
+                react_1["default"].createElement(react_native_1.Text, { style: styles.logoTitle }, "TAMASTUDY"),
+                react_1["default"].createElement(react_native_1.Text, { style: styles.logoSubTitle }, "React Native Study")),
+            react_1["default"].createElement(react_native_1.View, { style: styles.form },
+                react_1["default"].createElement(react_native_1.TextInput, { placeholder: 'Input your Email address...', value: email, onChangeText: handleChangeEmail, autoCorrect: false, autoCapitalize: 'none', style: [styles.defaultInput, styles.emailInput] }),
+                react_1["default"].createElement(react_native_1.TextInput, { placeholder: 'Input your Password...', value: password, onChangeText: handleChangePassword, autoCorrect: false, autoCapitalize: 'none', secureTextEntry: true, style: [styles.defaultInput, styles.passwordInput] }),
+                react_1["default"].createElement(react_native_1.TouchableOpacity, { onPress: function () { return alert('clicked!'); } },
+                    react_1["default"].createElement(react_native_1.Text, { style: { textAlign: 'right', color: '#fff' } }, "Forgot your password?"))),
+            react_1["default"].createElement(react_native_1.View, { style: styles.buttons },
+                react_1["default"].createElement(react_native_1.TouchableOpacity, { onPress: handleSubmit, style: styles.button },
+                    react_1["default"].createElement(react_native_1.Text, { style: styles.buttonText }, "Log In")),
+                react_1["default"].createElement(react_native_1.TouchableOpacity, { onPress: function () { return alert('clicked!'); } },
+                    react_1["default"].createElement(react_native_1.Text, { style: { textAlign: 'left', color: '#fff' } }, "Don't have an account?"))))));
 };
 var styles = react_native_1.StyleSheet.create({
     wrapper: {
