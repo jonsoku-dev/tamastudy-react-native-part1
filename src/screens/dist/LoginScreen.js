@@ -4,9 +4,10 @@ var native_1 = require("@react-navigation/native");
 var react_1 = require("react");
 var react_native_1 = require("react-native");
 var react_native_keyboard_aware_scroll_view_1 = require("react-native-keyboard-aware-scroll-view");
-var LoginScreen = function () {
-    var _a = react_1["default"].useState(''), email = _a[0], setEmail = _a[1];
-    var _b = react_1["default"].useState(''), password = _b[0], setPassword = _b[1];
+var LoginScreen = function (_a) {
+    var login = _a.login;
+    var _b = react_1["default"].useState(''), email = _b[0], setEmail = _b[1];
+    var _c = react_1["default"].useState(''), password = _c[0], setPassword = _c[1];
     var navigation = native_1.useNavigation();
     var goToMainScreen = function () {
         navigation.navigate('Main');
@@ -26,7 +27,7 @@ var LoginScreen = function () {
             return;
         }
         if (email && password) {
-            goToMainScreen();
+            login();
             return;
         }
     };

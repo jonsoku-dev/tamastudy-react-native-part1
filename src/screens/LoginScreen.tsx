@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import {
   View,
   Text,
@@ -9,7 +9,11 @@ import {
 } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-const LoginScreen = () => {
+interface Props {
+  login: any
+}
+
+const LoginScreen: FunctionComponent<Props> = ({ login }) => {
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
 
@@ -36,7 +40,7 @@ const LoginScreen = () => {
       return
     }
     if (email && password) {
-      goToMainScreen()
+      login()
       return
     }
   }
