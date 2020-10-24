@@ -1,10 +1,10 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './src/screens/LoginScreen';
 import MainScreen from './src/screens/MainScreen';
-import { Text } from 'react-native'
+import { Text, TouchableOpacity } from 'react-native'
 
 const Stack = createStackNavigator();
 
@@ -25,6 +25,7 @@ const App = () => {
         <Stack.Screen name="Login" component={LoginScreen} 
           options={{
             ...defaultStackOptions,
+            headerTitle : "로그인 페이지",
           }}
         />
         <Stack.Screen name="Main" component={MainScreen} 
