@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useEffect } from 'react'
 import {
   StyleSheet,
   SafeAreaView,
@@ -7,12 +7,14 @@ import {
   Platform,
   TextInput,
   TouchableOpacity,
+  FlatList,
 } from 'react-native'
-import { AntDesign } from '@expo/vector-icons'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import ko from 'dayjs/locale/ko'
 import TodoCard from '../components/TodoCard'
+import EmptyTodoList from '../components/EmptyTodoList'
+import axios from 'axios'
 
 dayjs.extend(relativeTime)
 dayjs.locale(ko)
@@ -21,35 +23,77 @@ interface Props {
   logout: any
 }
 
-interface ITodo {
+export interface ITodo {
   id: string
-  content: string
+  body: string
   completed: boolean
   createdAt: string
+  updatedAt: string
 }
 
 const MainScreen: FunctionComponent<Props> = ({ logout }) => {
   const [todoList, setTodoList] = React.useState<ITodo[]>([] as ITodo[])
+  const [body, setBody] = React.useState('')
 
-  const [content, setContent] = React.useState('')
-
-  const handleChangeContent = (value: string) => {
-    setContent(value)
+  const handleChangeBody = (value: string) => {
+    setBody(value)
   }
 
-  const addTodo = () => {
-    if (!content) {
-      return alert('할 일을 입력해주세요.')
+  const addTodo = async () => {
+    try {
+      if (!body) {
+        return alert('할 일을 입력해주세요.')
+      }
+      const response = await axios.post(
+        `https://tamastudy-todo-api.herokuapp.com/api/todo`,
+        {
+          body,
+        }
+      )
+      setTodoList([...todoList, response.data.result])
+      setBody('')
+    } catch (e) {
+      console.log(e)
     }
-    const todo: ITodo = {
-      id: new Date().getTime().toString(),
-      content: content.trim(),
-      completed: false,
-      createdAt: new Date().toISOString(),
-    }
-    setTodoList([...todoList, todo])
-    setContent('')
   }
+
+  const onClickCompleteTodo = ({
+    id,
+    completed,
+  }: {
+    id: string
+    completed: boolean
+  }) => async () => {
+    try {
+      const response = await axios.patch(
+        `https://tamastudy-todo-api.herokuapp.com/api/todo/${id}`,
+        {
+          completed: !completed,
+        }
+      )
+      const newTodoList = todoList.map((todo) =>
+        todo.id === id ? response.data.result : todo
+      )
+      setTodoList(newTodoList)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const getTodoList = async () => {
+    try {
+      const response = await axios.get(
+        'https://tamastudy-todo-api.herokuapp.com/api/todo'
+      )
+      setTodoList(response.data.result)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    getTodoList()
+  }, [])
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#606060' }}>
@@ -62,8 +106,8 @@ const MainScreen: FunctionComponent<Props> = ({ logout }) => {
       >
         <TextInput
           placeholder={'할 일을 입력해주세요. '}
-          value={content}
-          onChangeText={handleChangeContent}
+          value={body}
+          onChangeText={handleChangeBody}
           autoCorrect={false}
           autoCapitalize={'none'}
           style={[styles.defaultInput, styles.contentInput]}
@@ -88,9 +132,21 @@ const MainScreen: FunctionComponent<Props> = ({ logout }) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={{ backgroundColor: 'red' }}>
-        {/* Card */}
-        <TodoCard />
+      <View>
+        <FlatList
+          data={todoList}
+          keyExtractor={({ id }) => String(id)}
+          renderItem={({ item }) => (
+            <TodoCard
+              id={item.id}
+              completed={item.completed}
+              content={item.body}
+              createdAt={item.createdAt}
+              onClickCompleteTodo={onClickCompleteTodo}
+            />
+          )}
+          ListEmptyComponent={() => <EmptyTodoList />}
+        />
       </View>
     </SafeAreaView>
   )
@@ -104,6 +160,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#000',
     padding: 16,
+    height: 80,
   },
   contentInput: {},
 })
