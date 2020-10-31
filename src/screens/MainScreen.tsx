@@ -39,19 +39,22 @@ const MainScreen: FunctionComponent<Props> = ({ logout }) => {
     setBody(value)
   }
 
-  const addTodo = () => {
-    if (!body) {
-      return alert('할 일을 입력해주세요.')
+  const addTodo = async () => {
+    try {
+      if (!body) {
+        return alert('할 일을 입력해주세요.')
+      }
+      const response = await axios.post(
+        `https://tamastudy-todo-api.herokuapp.com/api/todo`,
+        {
+          body,
+        }
+      )
+      setTodoList([...todoList, response.data.result])
+      setBody('')
+    } catch (e) {
+      console.log(e)
     }
-    const todo: ITodo = {
-      id: new Date().getTime().toString(),
-      body: body.trim(),
-      completed: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }
-    setTodoList([...todoList, todo])
-    setBody('')
   }
 
   const onClickCompleteTodo = ({
@@ -60,12 +63,21 @@ const MainScreen: FunctionComponent<Props> = ({ logout }) => {
   }: {
     id: string
     completed: boolean
-  }) => () => {
-    const newTodoList = todoList.map((todo) =>
-      todo.id === id ? { ...todo, completed: !completed } : todo
-    )
-    setTodoList(newTodoList)
-    // + axios post
+  }) => async () => {
+    try {
+      const response = await axios.patch(
+        `https://tamastudy-todo-api.herokuapp.com/api/todo/${id}`,
+        {
+          completed: !completed,
+        }
+      )
+      const newTodoList = todoList.map((todo) =>
+        todo.id === id ? response.data.result : todo
+      )
+      setTodoList(newTodoList)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const getTodoList = async () => {
