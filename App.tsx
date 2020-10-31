@@ -11,7 +11,7 @@ const AuthStack = createNativeStackNavigator()
 const MainStack = createNativeStackNavigator()
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
 
   const login = () => {
     setIsLoggedIn(true)
@@ -25,13 +25,23 @@ const App = () => {
     <NavigationContainer>
       {isLoggedIn ? (
         <MainStack.Navigator>
-          <MainStack.Screen name="Main">
+          <MainStack.Screen
+            name="Main"
+            options={{
+              headerShown: false,
+            }}
+          >
             {(props) => <MainScreen logout={logout} {...props} />}
           </MainStack.Screen>
         </MainStack.Navigator>
       ) : (
         <AuthStack.Navigator>
-          <AuthStack.Screen name="Login">
+          <AuthStack.Screen
+            name="Login"
+            options={{
+              headerShown: false,
+            }}
+          >
             {(props) => <LoginScreen login={login} {...props} />}
           </AuthStack.Screen>
         </AuthStack.Navigator>

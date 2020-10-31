@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   defaultInput: {
-    padding: 16,
+    padding: 12,
     backgroundColor: '#fff',
     borderColor: '#eaeaea',
     borderWidth: 1,

@@ -1,8 +1,8 @@
 Arguments: 
-  /Users/ricky/.nvm/versions/node/v12.18.3/bin/node /usr/local/Cellar/yarn/1.22.5/libexec/bin/yarn.js add -D @types/react-native-keyboard-aware-scroll-view
+  /Users/ricky/.nvm/versions/node/v12.18.3/bin/node /usr/local/Cellar/yarn/1.22.5/libexec/bin/yarn.js add -D @types/dayjs
 
 PATH: 
-  /Users/ricky/.nvm/versions/node/v12.18.3/bin:/Users/ricky/Library/Android/sdk/platform-tools:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Library/Apple/usr/bin:/Users/ricky/.nvm/versions/node/v12.18.3/bin:/Users/ricky/Library/Android/sdk/platform-tools
+  /Users/ricky/.nvm/versions/node/v12.18.3/bin:/Users/ricky/Library/Android/sdk/platform-tools:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Library/Apple/usr/bin:/Users/ricky/.nvm/versions/node/v12.18.3/bin:/Users/ricky/Library/Android/sdk/platform-tools:/Users/ricky/tamastudy-react-native/todo/node_modules/.bin
 
 Yarn version: 
   1.22.5
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2freact-native-keyboard-aware-scroll-view: Not found
+  Error: https://registry.yarnpkg.com/@types%2fdayjs: Not found
       at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.22.5/libexec/lib/cli.js:66988:18)
       at Request.self.callback (/usr/local/Cellar/yarn/1.22.5/libexec/lib/cli.js:140749:22)
       at Request.emit (events.js:315:20)
@@ -37,9 +37,11 @@ npm manifest:
       "eject": "expo eject"
     },
     "dependencies": {
+      "@expo/vector-icons": "^10.2.1",
       "@react-native-community/masked-view": "0.1.10",
       "@react-navigation/native": "^5.7.6",
       "@react-navigation/stack": "^5.9.3",
+      "dayjs": "^1.9.4",
       "expo": "~39.0.2",
       "expo-status-bar": "~1.0.2",
       "react": "16.13.1",
@@ -50,13 +52,15 @@ npm manifest:
       "react-native-reanimated": "~1.13.0",
       "react-native-safe-area-context": "3.1.4",
       "react-native-screens": "~2.10.1",
-      "react-native-web": "~0.13.12"
+      "react-native-web": "~0.13.12",
+      "uuid": "^8.3.1"
     },
     "devDependencies": {
       "@babel/core": "~7.9.0",
       "@types/react": "~16.9.35",
       "@types/react-dom": "~16.9.8",
       "@types/react-native": "~0.63.2",
+      "@types/uuid": "^8.3.0",
       "prettier": "^2.1.2",
       "typescript": "~3.9.5"
     },
@@ -1099,7 +1103,7 @@ Lockfile:
       xcode "^3.0.0"
       xml-js "^1.6.11"
   
-  "@expo/vector-icons@^10.0.2":
+  "@expo/vector-icons@^10.0.2", "@expo/vector-icons@^10.2.1":
     version "10.2.1"
     resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-10.2.1.tgz#47fb2fa12d7ad601835babde6bd3ddea7f6fde89"
     integrity sha512-clYQZFLeU2y23n03hXg18EEsZS5c73sJJnfderztfSAqkUXkfUtv07fwuprYwbHIvgFkw6L7R6xJOCVYtS85iQ==
@@ -1419,6 +1423,11 @@ Lockfile:
     version "1.0.1"
     resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
     integrity sha512-l42BggppR6zLmpfU6fq9HEa2oGPEI8yrSPL3GITjfRInppYFahObbIQOQK3UGxEnyQpltZLaPe75046NOZQikw==
+  
+  "@types/uuid@^8.3.0":
+    version "8.3.0"
+    resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.0.tgz#215c231dff736d5ba92410e6d602050cce7e273f"
+    integrity sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ==
   
   "@types/yargs-parser@*":
     version "15.0.0"
@@ -2248,6 +2257,11 @@ Lockfile:
     version "1.9.3"
     resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.9.3.tgz#b7f94b22ad2a136a4ca02a01ab68ae893fe1a268"
     integrity sha512-V+1SyIvkS+HmNbN1G7A9+ERbFTV9KTXu6Oor98v2xHmzzpp52OIJhQuJSTywWuBY5pyAEmlwbCi1Me87n/SLOw==
+  
+  dayjs@^1.9.4:
+    version "1.9.4"
+    resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.9.4.tgz#fcde984e227f4296f04e7b05720adad2e1071f1b"
+    integrity sha512-ABSF3alrldf7nM9sQ2U+Ln67NRwmzlLOqG7kK03kck0mw3wlSSEKv/XhKGGxUjQcS57QeiCyNdrFgtj9nWlrng==
   
   debug@2.6.9, debug@^2.2.0, debug@^2.3.3:
     version "2.6.9"
@@ -5661,6 +5675,11 @@ Lockfile:
     version "7.0.3"
     resolved "https://registry.yarnpkg.com/uuid/-/uuid-7.0.3.tgz#c5c9f2c8cf25dc0a372c4df1441c41f5bd0c680b"
     integrity sha512-DPSke0pXhTZgoF/d+WSt2QaKMCFSfx7QegxEWT+JOuHF5aWrKEn0G+ztjuJg/gG8/ItK+rbPCD/yNv8yyih6Cg==
+  
+  uuid@^8.3.1:
+    version "8.3.1"
+    resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.1.tgz#2ba2e6ca000da60fce5a196954ab241131e05a31"
+    integrity sha512-FOmRr+FmWEIG8uhZv6C2bTgEVXsHk08kE7mPlrBbEe+c3r9pjceVPgupIfNIhc4yx55H69OXANrUaSuu9eInKg==
   
   vary@~1.1.2:
     version "1.1.2"
