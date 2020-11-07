@@ -252,6 +252,6 @@ var styles = react_native_1.StyleSheet.create({
     addText: {
         color: 'white'
     },
-    content: { marginTop: 32, marginBottom: 64 }
+    content: { marginBottom: 64 }
 });
 exports["default"] = MainScreen;

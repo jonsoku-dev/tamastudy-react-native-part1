@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   addText: {
     color: 'white',
   },
-  content: { marginTop: 32, marginBottom: 64 },
+  content: { marginBottom: 64 },
 })
 
 export default MainScreen

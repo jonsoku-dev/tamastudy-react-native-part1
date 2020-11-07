@@ -11,7 +11,7 @@ const AuthStack = createNativeStackNavigator()
 const MainStack = createNativeStackNavigator()
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   const login = () => {
     setIsLoggedIn(true)
