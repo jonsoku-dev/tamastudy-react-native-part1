@@ -27,8 +27,8 @@ export interface ITodo {
   id: string
   body: string
   completed: boolean
-  createdAt: string
-  updatedAt: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 const MainScreen: FunctionComponent<Props> = ({ logout }) => {
@@ -44,14 +44,24 @@ const MainScreen: FunctionComponent<Props> = ({ logout }) => {
       if (!body) {
         return alert('할 일을 입력해주세요.')
       }
+
+      setTodoList([
+        {
+          id: new Date().getTime().toString(),
+          body: body,
+          completed: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        ...todoList,
+      ])
+      setBody('')
       const response = await axios.post(
         `https://tamastudy-todo-api.herokuapp.com/api/todo`,
         {
           body,
         }
       )
-      setTodoList([...todoList, response.data.result])
-      setBody('')
     } catch (e) {
       console.log(e)
     }
@@ -65,15 +75,32 @@ const MainScreen: FunctionComponent<Props> = ({ logout }) => {
     completed: boolean
   }) => async () => {
     try {
+      const newTodoList = todoList.map((todo) =>
+        todo.id === id ? { ...todo, completed: !completed } : todo
+      )
+      setTodoList(newTodoList)
+
       const response = await axios.patch(
         `https://tamastudy-todo-api.herokuapp.com/api/todo/${id}`,
         {
           completed: !completed,
         }
       )
-      const newTodoList = todoList.map((todo) =>
-        todo.id === id ? response.data.result : todo
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const onClickEditButton = (id: string) => () => {
+    alert(`${id} 입니다.`)
+  }
+
+  const onClickDeleteButton = (id: string) => async () => {
+    try {
+      const response = await axios.delete(
+        `https://tamastudy-todo-api.herokuapp.com/api/todo/${id}`
       )
+      const newTodoList = todoList.filter((todo: ITodo) => todo.id !== id)
       setTodoList(newTodoList)
     } catch (e) {
       console.log(e)
@@ -99,7 +126,6 @@ const MainScreen: FunctionComponent<Props> = ({ logout }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: '#606060' }}>
       <View
         style={{
-          backgroundColor: 'blue',
           marginTop: Platform.OS === 'android' ? 30 : 0,
           position: 'relative',
         }}
@@ -132,7 +158,7 @@ const MainScreen: FunctionComponent<Props> = ({ logout }) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <View>
+      <View style={{ marginTop: 32, marginBottom: 64 }}>
         <FlatList
           data={todoList}
           keyExtractor={({ id }) => String(id)}
@@ -143,6 +169,8 @@ const MainScreen: FunctionComponent<Props> = ({ logout }) => {
               content={item.body}
               createdAt={item.createdAt}
               onClickCompleteTodo={onClickCompleteTodo}
+              onClickEditButton={onClickEditButton}
+              onClickDeleteButton={onClickDeleteButton}
             />
           )}
           ListEmptyComponent={() => <EmptyTodoList />}
