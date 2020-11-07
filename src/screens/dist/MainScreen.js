@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -62,13 +51,17 @@ var ko_1 = require("dayjs/locale/ko");
 var TodoCard_1 = require("../components/TodoCard");
 var EmptyTodoList_1 = require("../components/EmptyTodoList");
 var axios_1 = require("axios");
+var LoadingComponent_1 = require("../components/LoadingComponent");
 dayjs_1["default"].extend(relativeTime_1["default"]);
 dayjs_1["default"].locale(ko_1["default"]);
 var MainScreen = function (_a) {
     var logout = _a.logout;
     var _b = react_1["default"].useState([]), todoList = _b[0], setTodoList = _b[1];
     var _c = react_1["default"].useState(''), body = _c[0], setBody = _c[1];
-    var _d = react_1["default"].useState(false), editLoading = _d[0], setEditLoading = _d[1];
+    var _d = react_1["default"].useState(false), getListLoading = _d[0], setGetListLoading = _d[1];
+    var _e = react_1["default"].useState(false), addLoading = _e[0], setAddLoading = _e[1];
+    var _f = react_1["default"].useState(false), editLoading = _f[0], setEditLoading = _f[1];
+    var _g = react_1["default"].useState(false), deleteLoading = _g[0], setDeleteLoading = _g[1];
     var handleChangeBody = function (value) {
         setBody(value);
     };
@@ -81,24 +74,19 @@ var MainScreen = function (_a) {
                     if (!body) {
                         return [2 /*return*/, alert('할 일을 입력해주세요.')];
                     }
-                    setTodoList(__spreadArrays([
-                        {
-                            id: new Date().getTime().toString(),
-                            body: body,
-                            completed: false,
-                            createdAt: new Date(),
-                            updatedAt: new Date()
-                        }
-                    ], todoList));
-                    setBody('');
+                    setAddLoading(true);
                     return [4 /*yield*/, axios_1["default"].post("https://tamastudy-todo-api.herokuapp.com/api/todo", {
                             body: body
                         })];
                 case 1:
                     response = _a.sent();
+                    setAddLoading(false);
+                    setTodoList(__spreadArrays([response.data.result], todoList));
+                    setBody('');
                     return [3 /*break*/, 3];
                 case 2:
                     e_1 = _a.sent();
+                    setAddLoading(false);
                     console.log(e_1);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
@@ -108,26 +96,31 @@ var MainScreen = function (_a) {
     var onClickCompleteTodo = function (_a) {
         var id = _a.id, completed = _a.completed;
         return function () { return __awaiter(void 0, void 0, void 0, function () {
-            var newTodoList, response, e_2;
+            var response_1, newTodoList, e_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        newTodoList = todoList.map(function (todo) {
-                            return todo.id === id ? __assign(__assign({}, todo), { completed: !completed }) : todo;
-                        });
-                        setTodoList(newTodoList);
+                        setEditLoading(true);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, axios_1["default"].patch("https://tamastudy-todo-api.herokuapp.com/api/todo/" + id, {
                                 completed: !completed
                             })];
-                    case 1:
-                        response = _a.sent();
-                        return [3 /*break*/, 3];
                     case 2:
+                        response_1 = _a.sent();
+                        newTodoList = todoList.map(function (todo) {
+                            return todo.id === id ? response_1.data.result : todo;
+                        });
+                        setTodoList(newTodoList);
+                        setEditLoading(false);
+                        return [3 /*break*/, 4];
+                    case 3:
                         e_2 = _a.sent();
+                        setEditLoading(false);
                         console.log(e_2);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         }); };
@@ -135,7 +128,7 @@ var MainScreen = function (_a) {
     var editTodo = function (_a) {
         var id = _a.id, body = _a.body, completed = _a.completed;
         return __awaiter(void 0, void 0, void 0, function () {
-            var response_1, newTodoList, e_3;
+            var response_2, newTodoList, e_3;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -148,12 +141,12 @@ var MainScreen = function (_a) {
                                 completed: completed
                             })];
                     case 2:
-                        response_1 = _b.sent();
+                        response_2 = _b.sent();
                         newTodoList = todoList.map(function (todo) {
-                            return todo.id === id ? response_1.data.result : todo;
+                            return todo.id === id ? response_2.data.result : todo;
                         });
-                        setEditLoading(false);
                         setTodoList(newTodoList);
+                        setEditLoading(false);
                         return [3 /*break*/, 4];
                     case 3:
                         e_3 = _b.sent();
@@ -170,18 +163,23 @@ var MainScreen = function (_a) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, axios_1["default"]["delete"]("https://tamastudy-todo-api.herokuapp.com/api/todo/" + id)];
+                    setDeleteLoading(true);
+                    _a.label = 1;
                 case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, axios_1["default"]["delete"]("https://tamastudy-todo-api.herokuapp.com/api/todo/" + id)];
+                case 2:
                     response = _a.sent();
                     newTodoList = todoList.filter(function (todo) { return todo.id !== id; });
                     setTodoList(newTodoList);
-                    return [3 /*break*/, 3];
-                case 2:
+                    setDeleteLoading(false);
+                    return [3 /*break*/, 4];
+                case 3:
                     e_4 = _a.sent();
+                    setDeleteLoading(false);
                     console.log(e_4);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     }); }; };
@@ -190,50 +188,44 @@ var MainScreen = function (_a) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, axios_1["default"].get('https://tamastudy-todo-api.herokuapp.com/api/todo')];
+                    setGetListLoading(true);
+                    _a.label = 1;
                 case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, axios_1["default"].get('https://tamastudy-todo-api.herokuapp.com/api/todo')];
+                case 2:
                     response = _a.sent();
                     setTodoList(response.data.result);
-                    return [3 /*break*/, 3];
-                case 2:
+                    setGetListLoading(false);
+                    return [3 /*break*/, 4];
+                case 3:
                     e_5 = _a.sent();
+                    setGetListLoading(false);
                     console.log(e_5);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     }); };
     react_1.useEffect(function () {
         getTodoList();
     }, []);
-    return (react_1["default"].createElement(react_native_1.SafeAreaView, { style: { flex: 1, backgroundColor: '#606060' } },
-        react_1["default"].createElement(react_native_1.View, { style: {
-                marginTop: react_native_1.Platform.OS === 'android' ? 30 : 0,
-                position: 'relative'
-            } },
+    return (react_1["default"].createElement(react_native_1.SafeAreaView, { style: styles.wrapper },
+        react_1["default"].createElement(react_native_1.View, { style: styles.addForm },
             react_1["default"].createElement(react_native_1.TextInput, { placeholder: '할 일을 입력해주세요. ', value: body, onChangeText: handleChangeBody, autoCorrect: false, autoCapitalize: 'none', style: [styles.defaultInput, styles.contentInput] }),
-            react_1["default"].createElement(react_native_1.TouchableOpacity, { style: {
-                    position: 'absolute',
-                    right: 20,
-                    top: '50%',
-                    transform: [{ translateY: -8 }],
-                    backgroundColor: 'black'
-                }, onPress: addTodo },
-                react_1["default"].createElement(react_native_1.Text, { style: {
-                        padding: 8,
-                        color: 'white'
-                    } }, "Add"))),
-        react_1["default"].createElement(react_native_1.View, { style: { marginTop: 32, marginBottom: 64 } },
+            react_1["default"].createElement(react_native_1.TouchableOpacity, { style: styles.addButton, onPress: addTodo },
+                react_1["default"].createElement(react_native_1.Text, { style: styles.addText }, addLoading ? react_1["default"].createElement(LoadingComponent_1["default"], { color: '#FFF' }) : 'Add'))),
+        react_1["default"].createElement(react_native_1.View, { style: styles.content },
             react_1["default"].createElement(react_native_1.FlatList, { data: todoList, keyExtractor: function (_a) {
                     var id = _a.id;
                     return String(id);
                 }, renderItem: function (_a) {
                     var item = _a.item;
-                    return (react_1["default"].createElement(TodoCard_1["default"], { id: item.id, completed: item.completed, content: item.body, createdAt: item.createdAt, onClickCompleteTodo: onClickCompleteTodo, editTodo: editTodo, editLoading: editLoading, onClickDeleteButton: onClickDeleteButton }));
+                    return (react_1["default"].createElement(TodoCard_1["default"], { id: item.id, completed: item.completed, content: item.body, createdAt: item.createdAt, onClickCompleteTodo: onClickCompleteTodo, editTodo: editTodo, editLoading: editLoading, deleteLoading: deleteLoading, onClickDeleteButton: onClickDeleteButton }));
                 }, ListEmptyComponent: function () { return react_1["default"].createElement(EmptyTodoList_1["default"], null); } }))));
 };
 var styles = react_native_1.StyleSheet.create({
+    wrapper: { flex: 1, backgroundColor: '#606060' },
     defaultInput: {
         backgroundColor: '#fff',
         borderColor: '#eaeaea',
@@ -241,8 +233,25 @@ var styles = react_native_1.StyleSheet.create({
         fontSize: 20,
         color: '#000',
         padding: 16,
-        height: 80
+        height: 100
     },
-    contentInput: {}
+    contentInput: {
+        flex: 1,
+        marginRight: 'auto'
+    },
+    addForm: {
+        marginTop: react_native_1.Platform.OS === 'android' ? 30 : 0,
+        flexDirection: 'row',
+        height: 100
+    },
+    addButton: {
+        backgroundColor: 'green',
+        justifyContent: 'center',
+        padding: 32
+    },
+    addText: {
+        color: 'white'
+    },
+    content: { marginTop: 32, marginBottom: 64 }
 });
 exports["default"] = MainScreen;

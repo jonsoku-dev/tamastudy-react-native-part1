@@ -44,10 +44,11 @@ var relativeTime_1 = require("dayjs/plugin/relativeTime");
 var ko_1 = require("dayjs/locale/ko");
 var react_native_swipeout_1 = require("react-native-swipeout");
 var react_native_gesture_handler_1 = require("react-native-gesture-handler");
+var LoadingComponent_1 = require("./LoadingComponent");
 dayjs_1["default"].extend(relativeTime_1["default"]);
 dayjs_1["default"].locale(ko_1["default"]);
 var TodoCard = function (_a) {
-    var id = _a.id, content = _a.content, completed = _a.completed, createdAt = _a.createdAt, onClickCompleteTodo = _a.onClickCompleteTodo, editTodo = _a.editTodo, onClickDeleteButton = _a.onClickDeleteButton, editLoading = _a.editLoading;
+    var id = _a.id, content = _a.content, completed = _a.completed, createdAt = _a.createdAt, onClickCompleteTodo = _a.onClickCompleteTodo, editTodo = _a.editTodo, onClickDeleteButton = _a.onClickDeleteButton, editLoading = _a.editLoading, deleteLoading = _a.deleteLoading;
     var _b = react_1["default"].useState(false), editMode = _b[0], setEditMode = _b[1];
     var _c = react_1["default"].useState(content), editBody = _c[0], setEditBody = _c[1];
     var handleChangeEditBody = function (value) {
@@ -68,43 +69,62 @@ var TodoCard = function (_a) {
         {
             text: 'Edit',
             backgroundColor: 'green',
-            component: (react_1["default"].createElement(react_native_1.View, { style: { flex: 1, justifyContent: 'center', alignItems: 'center' } },
+            component: (react_1["default"].createElement(react_native_1.View, { style: styles.swipeoutButtonComponent },
                 react_1["default"].createElement(vector_icons_1.AntDesign, { name: "edit", size: 24, color: "white" }),
-                react_1["default"].createElement(react_native_1.Text, { style: { color: 'white', marginTop: 4 } }, "Edit"))),
+                react_1["default"].createElement(react_native_1.Text, { style: styles.swipeoutButtonComponentText }, "Edit"))),
             onPress: function () { return setEditMode(true); }
         },
         {
             text: 'Delete',
             backgroundColor: 'red',
-            component: (react_1["default"].createElement(react_native_1.View, { style: { flex: 1, justifyContent: 'center', alignItems: 'center' } },
+            component: (react_1["default"].createElement(react_native_1.View, { style: styles.swipeoutButtonComponent }, deleteLoading ? (react_1["default"].createElement(LoadingComponent_1["default"], null)) : (react_1["default"].createElement(react_1["default"].Fragment, null,
                 react_1["default"].createElement(vector_icons_1.AntDesign, { name: "delete", size: 24, color: "white" }),
-                react_1["default"].createElement(react_native_1.Text, { style: { color: 'white', marginTop: 4 } }, "Delete"))),
+                react_1["default"].createElement(react_native_1.Text, { style: styles.swipeoutButtonComponentText }, "Delete"))))),
             onPress: onClickDeleteButton(id)
         },
     ];
     if (editMode) {
-        return (react_1["default"].createElement(react_native_1.View, { style: {
-                marginTop: 16,
-                backgroundColor: 'white',
-                flexDirection: 'row',
-                alignItems: 'center'
-            } },
-            react_1["default"].createElement(react_native_1.View, { style: { flex: 1, marginRight: 'auto', padding: 16 } },
-                react_1["default"].createElement(react_native_gesture_handler_1.TextInput, { style: {
-                        padding: 16,
-                        borderWidth: 1,
-                        borderColor: 'black'
-                    }, value: editBody, onChangeText: handleChangeEditBody })),
-            react_1["default"].createElement(react_native_1.TouchableOpacity, { onPress: onClickEdit, style: { padding: 16, marginRight: 8 } }, editLoading ? (react_1["default"].createElement(vector_icons_1.AntDesign, { name: "loading1", size: 24, color: "black" })) : (react_1["default"].createElement(vector_icons_1.AntDesign, { name: "edit", size: 24, color: "black" })))));
+        return (react_1["default"].createElement(react_native_1.View, { style: styles.editModeWrapper },
+            react_1["default"].createElement(react_native_1.View, { style: styles.editModeForm },
+                react_1["default"].createElement(react_native_gesture_handler_1.TextInput, { style: styles.editModeInput, value: editBody, onChangeText: handleChangeEditBody })),
+            react_1["default"].createElement(react_native_1.TouchableOpacity, { onPress: onClickEdit, style: styles.editModeButton }, editLoading ? (react_1["default"].createElement(LoadingComponent_1["default"], null)) : (react_1["default"].createElement(vector_icons_1.AntDesign, { name: "edit", size: 24, color: "black" })))));
     }
-    return (react_1["default"].createElement(react_native_swipeout_1["default"], { autoClose: true, right: swipeoutButtons, style: { marginTop: 16 } },
-        react_1["default"].createElement(react_native_1.View, { style: {
-                backgroundColor: 'white',
-                flexDirection: 'row'
-            } },
-            react_1["default"].createElement(react_native_1.View, { style: { flex: 3, padding: 16 } },
-                react_1["default"].createElement(react_native_1.Text, { style: { fontWeight: '900', fontSize: 24, marginBottom: 8 } }, content),
+    return (react_1["default"].createElement(react_native_swipeout_1["default"], { autoClose: true, right: swipeoutButtons, style: styles.swipeout },
+        react_1["default"].createElement(react_native_1.View, { style: styles.wrapper },
+            react_1["default"].createElement(react_native_1.View, { style: styles.contents },
+                react_1["default"].createElement(react_native_1.Text, { style: styles.body }, content),
                 react_1["default"].createElement(react_native_1.Text, null, dayjs_1["default"](createdAt).fromNow())),
-            react_1["default"].createElement(react_native_1.TouchableOpacity, { onPress: onClickCompleteTodo({ id: id, completed: completed }), style: { flex: 1, justifyContent: 'center', alignItems: 'center' } }, completed ? (react_1["default"].createElement(vector_icons_1.AntDesign, { name: "checkcircle", size: 24, color: "black" })) : (react_1["default"].createElement(vector_icons_1.AntDesign, { name: "checkcircleo", size: 24, color: "black" }))))));
+            react_1["default"].createElement(react_native_1.TouchableOpacity, { onPress: onClickCompleteTodo({ id: id, completed: completed }), style: styles.completeButton }, completed ? (react_1["default"].createElement(vector_icons_1.AntDesign, { name: "checkcircle", size: 24, color: "black" })) : (react_1["default"].createElement(vector_icons_1.AntDesign, { name: "checkcircleo", size: 24, color: "black" }))))));
 };
+var styles = react_native_1.StyleSheet.create({
+    swipeoutButtonComponent: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    swipeoutButtonComponentText: { color: 'white', marginTop: 4 },
+    // edit mode
+    editModeWrapper: {
+        marginTop: 16,
+        backgroundColor: 'white',
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    editModeForm: { flex: 1, marginRight: 'auto', padding: 16 },
+    editModeInput: {
+        padding: 16,
+        borderWidth: 1,
+        borderColor: 'black'
+    },
+    editModeButton: { padding: 16, marginRight: 8 },
+    // Card
+    swipeout: { marginTop: 16 },
+    wrapper: {
+        backgroundColor: 'white',
+        flexDirection: 'row'
+    },
+    contents: { flex: 3, padding: 16 },
+    body: { fontWeight: '900', fontSize: 24, marginBottom: 8 },
+    completeButton: { flex: 1, justifyContent: 'center', alignItems: 'center' }
+});
 exports["default"] = TodoCard;
