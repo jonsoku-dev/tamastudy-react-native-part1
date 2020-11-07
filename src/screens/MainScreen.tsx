@@ -34,6 +34,7 @@ export interface ITodo {
 const MainScreen: FunctionComponent<Props> = ({ logout }) => {
   const [todoList, setTodoList] = React.useState<ITodo[]>([] as ITodo[])
   const [body, setBody] = React.useState('')
+  const [editLoading, setEditLoading] = React.useState(false)
 
   const handleChangeBody = (value: string) => {
     setBody(value)
@@ -91,8 +92,33 @@ const MainScreen: FunctionComponent<Props> = ({ logout }) => {
     }
   }
 
-  const onClickEditButton = (id: string) => () => {
-    alert(`${id} 입니다.`)
+  const editTodo = async ({
+    id,
+    body,
+    completed,
+  }: {
+    id: string
+    body: string
+    completed: boolean
+  }) => {
+    setEditLoading(true)
+    try {
+      const response = await axios.patch(
+        `https://tamastudy-todo-api.herokuapp.com/api/todo/${id}`,
+        {
+          body,
+          completed,
+        }
+      )
+      const newTodoList = todoList.map((todo: ITodo) =>
+        todo.id === id ? response.data.result : todo
+      )
+      setEditLoading(false)
+      setTodoList(newTodoList)
+    } catch (e) {
+      setEditLoading(false)
+      console.log(e)
+    }
   }
 
   const onClickDeleteButton = (id: string) => async () => {
@@ -169,7 +195,8 @@ const MainScreen: FunctionComponent<Props> = ({ logout }) => {
               content={item.body}
               createdAt={item.createdAt}
               onClickCompleteTodo={onClickCompleteTodo}
-              onClickEditButton={onClickEditButton}
+              editTodo={editTodo}
+              editLoading={editLoading}
               onClickDeleteButton={onClickDeleteButton}
             />
           )}

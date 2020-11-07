@@ -68,6 +68,7 @@ var MainScreen = function (_a) {
     var logout = _a.logout;
     var _b = react_1["default"].useState([]), todoList = _b[0], setTodoList = _b[1];
     var _c = react_1["default"].useState(''), body = _c[0], setBody = _c[1];
+    var _d = react_1["default"].useState(false), editLoading = _d[0], setEditLoading = _d[1];
     var handleChangeBody = function (value) {
         setBody(value);
     };
@@ -131,11 +132,41 @@ var MainScreen = function (_a) {
             });
         }); };
     };
-    var onClickEditButton = function (id) { return function () {
-        alert(id + " \uC785\uB2C8\uB2E4.");
-    }; };
+    var editTodo = function (_a) {
+        var id = _a.id, body = _a.body, completed = _a.completed;
+        return __awaiter(void 0, void 0, void 0, function () {
+            var response_1, newTodoList, e_3;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        setEditLoading(true);
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, axios_1["default"].patch("https://tamastudy-todo-api.herokuapp.com/api/todo/" + id, {
+                                body: body,
+                                completed: completed
+                            })];
+                    case 2:
+                        response_1 = _b.sent();
+                        newTodoList = todoList.map(function (todo) {
+                            return todo.id === id ? response_1.data.result : todo;
+                        });
+                        setEditLoading(false);
+                        setTodoList(newTodoList);
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_3 = _b.sent();
+                        setEditLoading(false);
+                        console.log(e_3);
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
     var onClickDeleteButton = function (id) { return function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response, newTodoList, e_3;
+        var response, newTodoList, e_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -147,15 +178,15 @@ var MainScreen = function (_a) {
                     setTodoList(newTodoList);
                     return [3 /*break*/, 3];
                 case 2:
-                    e_3 = _a.sent();
-                    console.log(e_3);
+                    e_4 = _a.sent();
+                    console.log(e_4);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });
     }); }; };
     var getTodoList = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response, e_4;
+        var response, e_5;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -166,8 +197,8 @@ var MainScreen = function (_a) {
                     setTodoList(response.data.result);
                     return [3 /*break*/, 3];
                 case 2:
-                    e_4 = _a.sent();
-                    console.log(e_4);
+                    e_5 = _a.sent();
+                    console.log(e_5);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -199,7 +230,7 @@ var MainScreen = function (_a) {
                     return String(id);
                 }, renderItem: function (_a) {
                     var item = _a.item;
-                    return (react_1["default"].createElement(TodoCard_1["default"], { id: item.id, completed: item.completed, content: item.body, createdAt: item.createdAt, onClickCompleteTodo: onClickCompleteTodo, onClickEditButton: onClickEditButton, onClickDeleteButton: onClickDeleteButton }));
+                    return (react_1["default"].createElement(TodoCard_1["default"], { id: item.id, completed: item.completed, content: item.body, createdAt: item.createdAt, onClickCompleteTodo: onClickCompleteTodo, editTodo: editTodo, editLoading: editLoading, onClickDeleteButton: onClickDeleteButton }));
                 }, ListEmptyComponent: function () { return react_1["default"].createElement(EmptyTodoList_1["default"], null); } }))));
 };
 var styles = react_native_1.StyleSheet.create({

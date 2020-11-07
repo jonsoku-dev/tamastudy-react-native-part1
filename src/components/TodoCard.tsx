@@ -6,6 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import ko from 'dayjs/locale/ko'
 import Swipeout from 'react-native-swipeout'
 import { ITodo } from '../screens/MainScreen'
+import { TextInput } from 'react-native-gesture-handler'
 
 dayjs.extend(relativeTime)
 dayjs.locale(ko)
@@ -16,8 +17,9 @@ interface Props {
   completed: boolean
   createdAt: string
   onClickCompleteTodo: any
-  onClickEditButton: any
+  editTodo: any
   onClickDeleteButton: any
+  editLoading: boolean
 }
 
 const TodoCard: FunctionComponent<Props> = ({
@@ -26,9 +28,22 @@ const TodoCard: FunctionComponent<Props> = ({
   completed,
   createdAt,
   onClickCompleteTodo,
-  onClickEditButton,
+  editTodo,
   onClickDeleteButton,
+  editLoading,
 }) => {
+  const [editMode, setEditMode] = React.useState(false)
+  const [editBody, setEditBody] = React.useState(content)
+
+  const handleChangeEditBody = (value: string) => {
+    setEditBody(value)
+  }
+
+  const onClickEdit = async () => {
+    await editTodo({ id, body: editBody, completed })
+    setEditMode(false)
+  }
+
   const swipeoutButtons = [
     {
       text: 'Edit',
@@ -41,7 +56,7 @@ const TodoCard: FunctionComponent<Props> = ({
           <Text style={{ color: 'white', marginTop: 4 }}>Edit</Text>
         </View>
       ),
-      onPress: onClickEditButton(id),
+      onPress: () => setEditMode(true),
     },
     {
       text: 'Delete',
@@ -58,8 +73,43 @@ const TodoCard: FunctionComponent<Props> = ({
     },
   ]
 
+  if (editMode) {
+    return (
+      <View
+        style={{
+          marginTop: 16,
+          backgroundColor: 'white',
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}
+      >
+        <View style={{ flex: 1, marginRight: 'auto', padding: 16 }}>
+          <TextInput
+            style={{
+              padding: 16,
+              borderWidth: 1,
+              borderColor: 'black',
+            }}
+            value={editBody}
+            onChangeText={handleChangeEditBody}
+          />
+        </View>
+        <TouchableOpacity
+          onPress={onClickEdit}
+          style={{ padding: 16, marginRight: 8 }}
+        >
+          {editLoading ? (
+            <AntDesign name="loading1" size={24} color="black" />
+          ) : (
+            <AntDesign name="edit" size={24} color="black" />
+          )}
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   return (
-    <Swipeout right={swipeoutButtons} style={{ marginTop: 16 }}>
+    <Swipeout autoClose right={swipeoutButtons} style={{ marginTop: 16 }}>
       <View
         style={{
           backgroundColor: 'white',
